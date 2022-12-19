@@ -43,8 +43,8 @@ public class Team implements Coordinates {
 
     public void goTo(Building building) {
         this.coord_x = building.getLocation()[0];
-        this.coord_y = building.getLocation()[0];
-        this.coord_z = building.getLocation()[0];
+        this.coord_y = building.getLocation()[1];
+        this.coord_z = building.getLocation()[2];
         System.out.println(this.getName() + " went to " + building.getName() + "!");
     }
 
