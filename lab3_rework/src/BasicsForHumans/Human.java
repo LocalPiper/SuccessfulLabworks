@@ -1,6 +1,10 @@
 package BasicsForHumans;
 
 
+import BasicsForBuildings.Building;
+import Exceptions.NamelessObjectException;
+import Interfaces.Storytelling;
+
 public class Human {
     private final String name;
     private final int id;
@@ -10,8 +14,12 @@ public class Human {
     private boolean is_hidden;
 
 
-    public Human(String name, Role role) {
-        this.name = name;
+    public Human(String name, Role role) throws NamelessObjectException {
+        if (name.length() != 0) {
+            this.name = name;
+        } else {
+            throw new NamelessObjectException("Object does not have a name!");
+        }
         this.id = (int) (Math.random() * 1000);
         this.state = State.ALIVE;
         this.is_hidden = false;
@@ -50,6 +58,7 @@ public class Human {
     public Coordinates getLocation() {
         return this.location;
     }
+
 
     @Override
     public boolean equals(Object obj) {

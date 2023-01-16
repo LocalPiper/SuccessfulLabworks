@@ -1,21 +1,31 @@
 package BasicsForHumans;
 
 import BasicsForBuildings.Building;
-import Interfaces.ArmedAndDangerous;
-import Interfaces.HideAndSeek;
-import Interfaces.MoveSomewhere;
-import Interfaces.SellPapers;
+import Exceptions.EmptyRobberyException;
+import Exceptions.NamelessObjectException;
+import Interfaces.*;
+import Tools.MoneyBag;
+import Tools.Weapons;
 
 
-public class OnDuty implements ArmedAndDangerous, HideAndSeek, SellPapers, MoveSomewhere {
+public class OnDuty implements ArmedAndDangerous, HideAndSeek, MoveSomewhere, CashRegisterOpener {
     private Human human = new Human("PlaceHolder", Role.BANKER);
+
+    public OnDuty() throws NamelessObjectException {
+    }
 
     public void setHuman(Human human) {
         this.human = human;
     }
 
-    public Human getHuman() {
-        return human;
+
+    public void threaten(Human victim) {
+        if (human.getRole() == Role.BANDIT) {
+            if (human.getState() != State.DEAD && victim.getState() != State.DEAD) {
+                Weapons weapon = Weapons.values()[(int) (Math.random() * Weapons.values().length)];
+                System.out.println(human.getName() + " threatens to kill " + victim.getName() + " with " + weapon);
+            }
+        }
     }
 
     public void shoot(Human victim) {
@@ -39,21 +49,34 @@ public class OnDuty implements ArmedAndDangerous, HideAndSeek, SellPapers, MoveS
         }
     }
 
-    public void transaction(Human customer) {
-        if (human.getRole() == Role.AUCTIONEER && human.getState() != State.DEAD) {
-            if (customer != null) {
-                System.out.println("Transaction between " + human.getName() + " and " + customer.getName() + " went successfully");
-            } else {
-                System.out.println("There were no transactions: nobody came.");
+    public void sellTo(Human customer) {
+        SellPapers operation = new SellPapers() {
+            @Override
+            public void transaction(Human customer) {
+                if (human.getRole() == Role.AUCTIONEER && human.getState() != State.DEAD) {
+                    if (customer != null) {
+                        System.out.println("Transaction between " + human.getName() + " and " + customer.getName() + " went successfully");
+                    } else {
+                        System.out.println("There were no transactions: nobody came.");
+                    }
+                }
             }
-        }
-
+        };
+        operation.transaction(customer);
     }
 
     public void hide(String place_to_hide) {
-        if (human.getRole() == Role.CASHIER && human.getState() != State.DEAD) {
+        if (human.getRole() == Role.CASHIER && human.getState() != State.DEAD && !human.getHidden()) {
             System.out.println(human.getName() + " chose a place to hide: " + place_to_hide);
             human.setHidden(true);
+        }
+    }
+
+    public void openCashRegister(Human bandit, int money, MoneyBag bag) throws EmptyRobberyException {
+        if (human.getRole() == Role.CASHIER && bandit.getRole() == Role.BANDIT && human.getState() != State.DEAD && bandit.getState() != State.DEAD) {
+            System.out.println(bandit.getName() + " forced " + human.getName() + " to open the cash register");
+            bag.setMoney(money);
+            System.out.println(bandit.getName() + " put money in the bag");
         }
     }
 

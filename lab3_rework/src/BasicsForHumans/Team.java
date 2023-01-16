@@ -38,7 +38,7 @@ public class Team implements MoveSomewhere {
     }
 
     public void join(Human member) {
-        if (member.getRole() == this.getCondition() || (member.getRole() == Role.BANKER && this.getCondition() == Role.AUCTIONEER) || (member.getRole() == Role.AUCTIONEER && this.getCondition() == Role.BANKER)) {
+        if (member.getRole() == this.getCondition() || ((member.getRole() == Role.CASHIER || member.getRole() == Role.BANKER) && this.getCondition() == Role.AUCTIONEER) || ((member.getRole() == Role.CASHIER || member.getRole() == Role.AUCTIONEER) && this.getCondition() == Role.BANKER)) {
             Human[] new_list = new Human[this.getMembers().length + 1];
             for (int i = 0; i < this.getMembers().length; ++i) {
                 new_list[i] = this.getMembers()[i];
@@ -52,16 +52,28 @@ public class Team implements MoveSomewhere {
     }
 
     public void goTo(Building building) {
-        for (Human member : members) {
-            member.getLocation().setX(building.getLocation().getX());
-            member.getLocation().setY(building.getLocation().getY());
-            member.getLocation().setZ(building.getLocation().getZ());
-        }
-        getLocation().setX(building.getLocation().getX());
-        getLocation().setY(building.getLocation().getY());
-        getLocation().setZ(building.getLocation().getZ());
-        if (members.length > 0) {
-            System.out.println("Team " + getName() + " arrives to " + building.getName());
+        try {
+            for (Human member : members) {
+                member.getLocation().setX(building.getLocation().getX());
+                member.getLocation().setY(building.getLocation().getY());
+                member.getLocation().setZ(building.getLocation().getZ());
+            }
+            getLocation().setX(building.getLocation().getX());
+            getLocation().setY(building.getLocation().getY());
+            getLocation().setZ(building.getLocation().getZ());
+            if (members.length > 0) {
+                System.out.println("Team " + getName() + " arrives to " + building.getName());
+            }
+        } catch (NullPointerException n) {
+            for (Human member : members) {
+                member.getLocation().setX((int) (Math.random() * 100));
+                member.getLocation().setY((int) (Math.random() * 100));
+                member.getLocation().setZ((int) (Math.random() * 100));
+            }
+            getLocation().setX((int) (Math.random() * 100));
+            getLocation().setY((int) (Math.random() * 100));
+            getLocation().setZ((int) (Math.random() * 100));
+            System.out.println("Team " + getName() + " left");
         }
     }
 

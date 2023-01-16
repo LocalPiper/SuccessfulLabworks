@@ -1,14 +1,19 @@
 package BasicsForBuildings;
 
 import BasicsForHumans.Coordinates;
+import Exceptions.NamelessObjectException;
 
 public abstract class Building {
     private final String name;
     private final int id;
-    private Coordinates location;
+    private final Coordinates location;
 
-    public Building(String name) {
-        this.name = name;
+    public Building(String name) throws NamelessObjectException {
+        if (name.length() != 0) {
+            this.name = name;
+        } else {
+            throw new NamelessObjectException("Object does not have a name!");
+        }
         this.id = (int) (Math.random() * 1000 + 1000);
         this.location = new Coordinates();
     }
@@ -25,6 +30,25 @@ public abstract class Building {
         return this.location;
     }
 
+    public int getCash() {
+        class CashRegister {
+            private int money;
+
+            public CashRegister() {
+                this.money = (int) (Math.random() * 10000000);
+            }
+
+            public int getMoney() {
+                int stolen = this.money;
+                this.money = 0;
+                return stolen;
+            }
+
+        }
+        CashRegister cash_register = new CashRegister();
+        return cash_register.getMoney();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -38,6 +62,7 @@ public abstract class Building {
             return a.id == this.id;
         }
     }
+
 
     @Override
     public String toString() {

@@ -5,5 +5,5 @@ public enum Role {
     BANKER,
     POLICEMAN,
     AUCTIONEER,
-    CASHIER
+    CASHIER;
 }

@@ -1,9 +1,9 @@
 package BasicsForBuildings;
 
-import BasicsForBuildings.Building;
+import Exceptions.NamelessObjectException;
 
 public class Bank extends Building {
-    public Bank(String name) {
+    public Bank(String name) throws NamelessObjectException {
         super(name);
     }
 
